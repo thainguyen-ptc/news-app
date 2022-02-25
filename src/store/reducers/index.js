@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
 
 import uiReducer from './uiReducer';
+import homePageReducers from './pages/home-page';
 
 const pageReducers = combineReducers({
-  // homePage: homePageReducers
+  homePage: homePageReducers
 });
 
 const createRootReducer = () => combineReducers({

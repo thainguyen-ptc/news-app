@@ -4,7 +4,6 @@ module.exports = {
     browser: true,
     commonjs: true,
     es6: true,
-    es2021: true,
     node: true,
     jest: true
   },
@@ -21,7 +20,8 @@ module.exports = {
       experimentalObjectRestSpread: true,
       jsx: true
     },
-    sourceType: 'module'
+    sourceType: 'module',
+    requireConfigFile: false
   },
   settings: {
     'import/resolver': {

@@ -1,6 +1,10 @@
 import combineSagas from 'utils/combine-sagas.util';
 
-const SAGAS = [];
+import articleFeedsSagas from './pages/home-page/articleFeedsSaga';
+
+const SAGAS = [
+  articleFeedsSagas
+];
 
 function* rootSagas () {
   yield combineSagas(SAGAS);

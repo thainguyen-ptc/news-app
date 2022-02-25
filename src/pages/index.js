@@ -1,24 +1,34 @@
 import React, { Fragment } from 'react';
 import Head from 'next/head';
+import { connect } from 'react-redux';
+import { END } from 'redux-saga';
 import InfiniteScroll from 'react-infinite-scroller';
 import { isMobileOnly } from 'react-device-detect';
 
-import newsFeed from 'mock-data/articles.json';
 import { StyledContainer } from 'styles/pages/HomePage.style';
 
 import withSSREnvironment from 'hocs/withSSREnvironment';
 import MainLayout from 'layouts/MainLayout';
 import NewsFeed from 'components/pages/home-page/NewsFeed/NewsFeed';
 
+import reduxWrapper from 'store';
+import { ARTICLE_FEEDS_ACTIONS } from 'store/actions/pages/home-page/articleFeedsAction';
+import {
+  getArticleFeedsData,
+  getWhetherArticleFeedsCouldBeLoadedMore,
+  getWhetherArticleFeedsLoading
+} from 'store/selectors/pages/home-page/articleFeedsSelector';
+
 const MainHeader = () => <>This is a dummy header</>;
 const MainFooter = () => <>This is a dummy footer</>;
 const NewsFeedRenderer = withSSREnvironment(NewsFeed);
 
-const isNewsFeedLoading = false,
-  couldNewsFeedBeLoadedMore = false; // dummy
-const loadMoreNewsFeed = () => {}; // dummy
-
-function HomePage () {
+function HomePage ({
+  isNewsFeedLoading,
+  newsFeed,
+  couldNewsFeedBeLoadedMore,
+  loadMoreNewsFeed
+}) {
   function handleLoadMoreNewsFeed () {
     if (isNewsFeedLoading) {
       return;
@@ -53,4 +63,25 @@ function HomePage () {
   </>;
 }
 
-export default HomePage;
+export const getServerSideProps = reduxWrapper.getServerSideProps(store => async () => {
+  store.dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData());
+  store.dispatch(END);
+  await store.sagaTask.toPromise();
+});
+
+
+function mapStateToProps (state) {
+  const newsFeed = getArticleFeedsData(state),
+    isNewsFeedLoading = getWhetherArticleFeedsLoading(state),
+    couldNewsFeedBeLoadedMore = getWhetherArticleFeedsCouldBeLoadedMore(state);
+
+  return { newsFeed, isNewsFeedLoading, couldNewsFeedBeLoadedMore };
+}
+
+function mapDispatchToProps (dispatch) {
+  const loadMoreNewsFeed = () => dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData(true));
+
+  return { loadMoreNewsFeed };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
