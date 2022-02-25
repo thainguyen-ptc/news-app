@@ -1,0 +1,6 @@
+const {
+  NEXT_PUBLIC_API_ENDPOINT: API_ENDPOINT,
+  NEXT_PUBLIC_API_KEY: API_KEY
+} = process.env;
+
+export { API_ENDPOINT, API_KEY };
