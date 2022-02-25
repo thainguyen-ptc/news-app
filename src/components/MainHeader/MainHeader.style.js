@@ -17,6 +17,7 @@ export const StyledRightSideBarWrapper = styled(Dropdown)`
     font-size: ${ pixelsToRem(16) };
   }
   .dropdown-inner {
+    position: relative;
     max-height: ${ pixelsToRem(320) };
     overflow-y: auto;
   }

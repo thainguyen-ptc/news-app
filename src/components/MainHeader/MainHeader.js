@@ -1,14 +1,19 @@
 import React from 'react';
-import { arrayOf, shape, string } from 'prop-types';
+import { arrayOf, func, object, shape, string } from 'prop-types';
 import debounce from 'lodash.debounce';
 
-import Link from 'next/link';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 import { StyledContainer, StyledRightSideBarWrapper } from './MainHeader.style';
-
-function MainHeader ({ sources }) {
+function MainHeader ({ sources, selectedSourceIdsMap, onSelectSource }) {
   const toggleShowingRightSidebarHandler = debounce(onToggleShowingRightSidebar, 500);
+
+  const handleSourceSelection = sourceId => event => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    onSelectSource(sourceId);
+  };
 
   function onToggleShowingRightSidebar (isShowing) {
     const toggleClass = 'mb-sidebar-open',
@@ -46,7 +51,7 @@ function MainHeader ({ sources }) {
             <Dropdown.Toggle variant="info" split={ false } className="border-0">
               -- All resources --
             </Dropdown.Toggle>
-            <Dropdown.Menu align="end" renderOnMount className="p-0">
+            <Dropdown.Menu align="end" renderOnMount className="p-0 pl-3">
               <Dropdown.Item className="p-0 backdrop" />
               <div className="pt-3 pb-3 dropdown-inner">
                 {
@@ -54,10 +59,16 @@ function MainHeader ({ sources }) {
                     as="button"
                     key={ source.id }
                     type="button"
-                    className="btn btn-link text-center">
-                    <Link href={ `/category/${source.id}` } passHref>
-                      <a href="/">{ source.name }</a>
-                    </Link>
+                    className="btn btn-link"
+                    onClick={ handleSourceSelection(source.id) }>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value={source.id}
+                      id={source.id}
+                      checked={ !!selectedSourceIdsMap[source.id] }
+                      readOnly />
+                    { source.name }
                   </Dropdown.Item>)
                 }
               </div>
@@ -73,11 +84,15 @@ MainHeader.propTypes = {
   sources: arrayOf(shape({
     id: string.isRequired,
     name: string
-  }))
+  })),
+  selectedSourceIdsMap: object,
+  onSelectSource: func
 };
 
 MainHeader.defaultProps = {
-  sources: []
+  sources: [],
+  selectedSourceIdsMap: {},
+  onSelectSource: () => {}
 };
 
 export default MainHeader;
