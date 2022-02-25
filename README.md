@@ -1,5 +1,10 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Reference project
+
+- The basic configurations (eslint, redux store, UI templates,...) are re-used from my own recent project (https://github.com/nisil-thaing/news-blog-nextjs - nearly 1 year ago)
+- I'm just loading api and fixing my components's store and binding to the prepared template
+
 ## Getting Started
 
 First, run the development server:

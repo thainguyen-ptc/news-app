@@ -1,0 +1,6 @@
+import { DEFAULT_DATA_WITH_PAGINATION_INITIAL_STATE } from 'utils/data-store.util';
+
+export const NEWS_SOURCES_INITIAL_STATE = {
+  ...DEFAULT_DATA_WITH_PAGINATION_INITIAL_STATE,
+  data: []
+};
