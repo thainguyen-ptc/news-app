@@ -32,6 +32,7 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks'],
   rules: {
+    'react/jsx-key': 'off',
     'comma-dangle': ['error', 'never'],
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'react/prop-types': ['off'],
