@@ -17,15 +17,24 @@ class ArticleService {
   /**
    * Fetching article feeds list
    *
-   * @typedef {{ page: number, itemsPerPage: number }} PagingParams
-   * @param {PagingParams} params
+   * @typedef {{ page: number, itemsPerPage: number, sources: string }} RequestParams
+   * @param {RequestParams} params
    * @return {Object}
    */
   async fetchArticleFeeds (params) {
     try {
+      const {
+        itemsPerPage: pageSize,
+        ...restParams
+      } = params;
       const responseData = await httpClient.get(
         this.#articleFeedsUrl,
-        { params: { page: params.page, pageSize: params.itemsPerPage, country: 'us' } }
+        {
+          params: {
+            pageSize,
+            ...restParams
+          }
+        }
       );
       const dataWithPaging = mapDataWithPaginationFromDataDataResponse(responseData, 'articles');
       const totalItems = dataWithPaging.pagingInfo.totalItems,

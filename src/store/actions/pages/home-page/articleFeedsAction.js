@@ -12,7 +12,7 @@ export const ARTICLE_FEEDS_ACTION_TYPES = {
 export const ARTICLE_FEEDS_ACTIONS = {
   fetchArticleFeedsData: createAction(
     ARTICLE_FEEDS_ACTION_TYPES.FETCH_ARTICLE_FEEDS_DATA,
-    isLoadMore => ({ payload: { isLoadMore } })
+    (sources, isLoadMore) => ({ payload: { sources, isLoadMore } })
   ),
   fetchArticleFeedsDataSuccess: createAction(
     ARTICLE_FEEDS_ACTION_TYPES.FETCH_ARTICLE_FEEDS_DATA_SUCCESS,

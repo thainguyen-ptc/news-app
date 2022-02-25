@@ -8,11 +8,17 @@ import { getArticleFeedsPagingInfo } from 'store/selectors/pages/home-page/artic
 const articleService = new ArticleService();
 
 function* fetchArticleFeedsDataSaga (action) {
-  const { isLoadMore = false } = action.payload;
+  const { sources, isLoadMore = false } = action.payload;
   const params = {
     page: DEFAULT_PAGING_INFO.currentPage,
     itemsPerPage: DEFAULT_PAGING_INFO.itemsPerPage
   };
+
+  if (sources) {
+    params.sources = sources;
+  } else {
+    params.category = 'general';
+  }
 
   if (isLoadMore) {
     const pagingInfo = yield select(getArticleFeedsPagingInfo);

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { connect } from 'react-redux';
 import { END } from 'redux-saga';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -29,12 +30,15 @@ function HomePage ({
   couldNewsFeedBeLoadedMore,
   loadMoreNewsFeed
 }) {
+  const router = useRouter();
+
   function handleLoadMoreNewsFeed () {
     if (isNewsFeedLoading) {
       return;
     }
 
-    return loadMoreNewsFeed();
+    const { sources } = router.query;
+    return loadMoreNewsFeed(sources);
   }
 
   return <>
@@ -63,8 +67,9 @@ function HomePage ({
   </>;
 }
 
-export const getServerSideProps = reduxWrapper.getServerSideProps(store => async () => {
-  store.dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData());
+export const getServerSideProps = reduxWrapper.getServerSideProps(store => async context => {
+  const { sources } = context.query;
+  store.dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData(sources));
   store.dispatch(END);
   await store.sagaTask.toPromise();
 });
@@ -79,7 +84,8 @@ function mapStateToProps (state) {
 }
 
 function mapDispatchToProps (dispatch) {
-  const loadMoreNewsFeed = () => dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData(true));
+  const loadMoreNewsFeed = sources =>
+    dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData(sources, true));
 
   return { loadMoreNewsFeed };
 }
