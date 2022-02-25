@@ -20,19 +20,19 @@ function* fetchArticleFeedsDataSaga (action) {
     params.category = 'general';
   }
 
-  if (isLoadMore) {
-    const pagingInfo = yield select(getArticleFeedsPagingInfo);
-    const couldBeLoadedMore = pagingInfo.currentPage < pagingInfo.totalPages;
-
-    if (!couldBeLoadedMore) {
-      throw new Error('You’re all caught up!');
-    } else {
-      params.page = pagingInfo.currentPage + 1;
-      params.itemsPerPage = pagingInfo.itemsPerPage;
-    }
-  }
-
   try {
+    if (isLoadMore) {
+      const pagingInfo = yield select(getArticleFeedsPagingInfo);
+      const couldBeLoadedMore = pagingInfo.currentPage < pagingInfo.totalPages;
+
+      if (!couldBeLoadedMore) {
+        throw new Error('You’re all caught up!');
+      } else {
+        params.page = pagingInfo.currentPage + 1;
+        params.itemsPerPage = pagingInfo.itemsPerPage;
+      }
+    }
+
     const responseData = yield call(
       articleService.fetchArticleFeeds,
       params

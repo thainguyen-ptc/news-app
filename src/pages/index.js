@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { connect } from 'react-redux';
@@ -29,9 +29,18 @@ function HomePage ({
   isNewsFeedLoading,
   newsFeed,
   couldNewsFeedBeLoadedMore,
+  reloadNewsFeed,
   loadMoreNewsFeed
 }) {
   const router = useRouter();
+
+  useEffect(function () {
+    const sources = router.query.sources;
+
+    if (reloadNewsFeed) {
+      reloadNewsFeed(sources);
+    }
+  }, [ router.query.sources, reloadNewsFeed ]);
 
   function handleLoadMoreNewsFeed () {
     if (isNewsFeedLoading) {
@@ -50,19 +59,25 @@ function HomePage ({
     </Head>
     <MainLayout header={ MainHeader } footer={ MainFooter }>
       <StyledContainer className="container">
-        <section>
-          <InfiniteScroll
-            className="infinity-feeds-wrapper"
-            pageStart={ 1 }
-            threshold={ isMobileOnly ? 1200 : 1800 }
-            loadMore={ handleLoadMoreNewsFeed }
-            hasMore={ couldNewsFeedBeLoadedMore }
-            loader={
-              <Fragment key={ 0 }>Loading...</Fragment>
-            }>
-            <NewsFeedRenderer data={ newsFeed } />
-          </InfiniteScroll>
-        </section>
+        {
+          newsFeed.length > 0 && <section>
+            <InfiniteScroll
+              className="infinity-feeds-wrapper"
+              pageStart={ 1 }
+              threshold={ isMobileOnly ? 1200 : 1800 }
+              loadMore={ handleLoadMoreNewsFeed }
+              hasMore={ couldNewsFeedBeLoadedMore }
+              loader={
+                <Fragment key={ 0 }>Loading...</Fragment>
+              }>
+              <NewsFeedRenderer data={ newsFeed } />
+            </InfiniteScroll>
+          </section>
+        }
+        {
+          !couldNewsFeedBeLoadedMore && !isNewsFeedLoading
+            && <p className="font-italic text-center">You’re all caught up!</p>
+        }
       </StyledContainer>
     </MainLayout>
   </>;
@@ -86,10 +101,12 @@ function mapStateToProps (state) {
 }
 
 function mapDispatchToProps (dispatch) {
+  const reloadNewsFeed = sources =>
+    dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData(sources));
   const loadMoreNewsFeed = sources =>
     dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData(sources, true));
 
-  return { loadMoreNewsFeed };
+  return { reloadNewsFeed, loadMoreNewsFeed };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

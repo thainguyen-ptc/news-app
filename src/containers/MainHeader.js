@@ -23,8 +23,7 @@ function MainHeader ({ newsSources }) {
       }, {});
       updateSelectedSourceIdsMap(initSourcesMap);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [router.query.sources]);
 
   function handleSourceSelection (sourceId) {
     let newSelectedSourceIdsMap = {...selectedSourceIdsMap};
@@ -48,7 +47,14 @@ function MainHeader ({ newsSources }) {
     }, '');
     
     updateSelectedSourceIdsMap(newSelectedSourceIdsMap);
-    router.push(`${router.pathname}?sources=${sourcesToString}`);
+
+    const redirectionUrl = `${router.pathname}?sources=${sourcesToString}`;
+
+    router.push(
+      redirectionUrl,
+      undefined,
+      { shallow: true }
+    );
   } 
 
   return <MainHeaderComponent
