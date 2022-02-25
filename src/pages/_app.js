@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import SSRProvider from 'react-bootstrap/SSRProvider';
 
 import GlobalStyles from 'styles/index.style';
 import reduxWrapper from 'store';
@@ -11,7 +12,9 @@ function MasterApp({ Component, pageProps }) {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
     </Head>
     <GlobalStyles />
-    <Component {...pageProps} />
+    <SSRProvider>
+      <Component {...pageProps} />
+    </SSRProvider>
   </>;
 }
 

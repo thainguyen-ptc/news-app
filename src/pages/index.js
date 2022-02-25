@@ -9,6 +9,7 @@ import { StyledContainer } from 'styles/pages/HomePage.style';
 
 import withSSREnvironment from 'hocs/withSSREnvironment';
 import MainLayout from 'layouts/MainLayout';
+import MainHeader from 'containers/MainHeader';
 import NewsFeed from 'components/pages/home-page/NewsFeed/NewsFeed';
 
 import reduxWrapper from 'store';
@@ -19,7 +20,6 @@ import {
   getWhetherArticleFeedsLoading
 } from 'store/selectors/pages/home-page/articleFeedsSelector';
 
-const MainHeader = () => <>This is a dummy header</>;
 const MainFooter = () => <>This is a dummy footer</>;
 const NewsFeedRenderer = withSSREnvironment(NewsFeed);
 
