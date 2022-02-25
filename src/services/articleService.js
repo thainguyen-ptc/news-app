@@ -1,17 +1,16 @@
 import httpClient from 'services/httpClient';
 import {
-  getDataBodyFromResponseToData,
   mapDataWithPaginationFromDataDataResponse,
   mapErrorResponseToErrorObject
 } from 'utils/api-request.util';
 
 class ArticleService {
   #articleFeedsUrl = '/top-headlines';
-  #subscriberExclusiveUrl = '/categories/subscriber-exclusive/posts';
+  #topHeadlinesResourcesUrl = '/top-headlines/sources';
 
   constructor () {
     this.fetchArticleFeeds = this.fetchArticleFeeds.bind(this);
-    this.fetchSubscriberExclusiveArticles = this.fetchSubscriberExclusiveArticles.bind(this);
+    this.fetchTopHeadlinesResources = this.fetchTopHeadlinesResources.bind(this);
   }
 
   /**
@@ -57,17 +56,27 @@ class ArticleService {
   /**
    * Fetching subscriber exclusive article list
    *
-   * @typedef {{ page: number, itemsPerPage: number }} PagingParams
-   * @param {PagingParams} params
    * @return {Object}
    */
-  async fetchSubscriberExclusiveArticles (params) {
+  async fetchTopHeadlinesResources () {
     try {
       const responseData = await httpClient.get(
-        this.#subscriberExclusiveUrl,
-        { params: { page: params.page, pageSize: params.itemsPerPage } }
+        this.#topHeadlinesResourcesUrl,
+        { params: {} }
       );
-      return getDataBodyFromResponseToData(responseData);
+      const dataWithPaging = mapDataWithPaginationFromDataDataResponse(responseData, 'sources');
+      const totalItems = dataWithPaging.data.length,
+        totalPages = 1;
+
+      return {
+        data: dataWithPaging.data,
+        pagingInfo: {
+          totalItems,
+          itemsPerPage: totalItems,
+          currentPage: 1,
+          totalPages
+        }
+      };
     } catch (err) {
       return mapErrorResponseToErrorObject(err);
     }

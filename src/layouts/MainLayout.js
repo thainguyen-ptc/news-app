@@ -1,5 +1,5 @@
 import React from 'react';
-import { func, node } from 'prop-types';
+import { oneOfType, func, node, object } from 'prop-types';
 
 import { StyledContainer } from './MainLayout.style';
 
@@ -12,9 +12,9 @@ function MainLayout ({ children, ...restProps }) {
 }
 
 MainLayout.propTypes = {
-  header: func,
+  header: oneOfType([func, object]),
   children: node.isRequired,
-  footer: func
+  footer: oneOfType([func, object])
 };
 
 export default MainLayout;

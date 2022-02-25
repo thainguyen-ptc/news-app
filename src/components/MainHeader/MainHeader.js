@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { arrayOf, func, object, shape, string } from 'prop-types';
 import debounce from 'lodash.debounce';
 
@@ -7,6 +7,23 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { StyledContainer, StyledRightSideBarWrapper } from './MainHeader.style';
 function MainHeader ({ sources, selectedSourceIdsMap, onSelectSource }) {
   const toggleShowingRightSidebarHandler = debounce(onToggleShowingRightSidebar, 500);
+  const resourceSelectionText = useMemo(function () {
+    const defaultValue = '-- All resources --';
+    const selectedSourceIds = Object.keys(selectedSourceIdsMap)
+      .filter(source => !!selectedSourceIdsMap[source]);
+
+    if (selectedSourceIds.length === 0) {
+      return defaultValue;
+    }
+
+    const firstFoundSource = sources.find(source => selectedSourceIdsMap[source.id]);
+
+    if (selectedSourceIds.length === 1) {
+      return firstFoundSource?.name || defaultValue;
+    }
+
+    return firstFoundSource?.name ? `${firstFoundSource.name}...` : defaultValue;
+  }, [sources, selectedSourceIdsMap]);
 
   const handleSourceSelection = sourceId => event => {
     event.stopPropagation();
@@ -49,7 +66,7 @@ function MainHeader ({ sources, selectedSourceIdsMap, onSelectSource }) {
         <div className="right-content">
           <StyledRightSideBarWrapper onToggle={ toggleShowingRightSidebarHandler }>
             <Dropdown.Toggle variant="info" split={ false } className="border-0">
-              -- All resources --
+              { resourceSelectionText }
             </Dropdown.Toggle>
             <Dropdown.Menu align="end" renderOnMount className="p-0 pl-3">
               <Dropdown.Item className="p-0 backdrop" />

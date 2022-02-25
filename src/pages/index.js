@@ -14,6 +14,7 @@ import MainHeader from 'containers/MainHeader';
 import NewsFeed from 'components/pages/home-page/NewsFeed/NewsFeed';
 
 import reduxWrapper from 'store';
+import { NEWS_SOURCES_ACTIONS } from 'store/actions/newsSourcesAction';
 import { ARTICLE_FEEDS_ACTIONS } from 'store/actions/pages/home-page/articleFeedsAction';
 import {
   getArticleFeedsData,
@@ -70,6 +71,7 @@ function HomePage ({
 export const getServerSideProps = reduxWrapper.getServerSideProps(store => async context => {
   const { sources } = context.query;
   store.dispatch(ARTICLE_FEEDS_ACTIONS.fetchArticleFeedsData(sources));
+  store.dispatch(NEWS_SOURCES_ACTIONS.fetchNewsSourcesData());
   store.dispatch(END);
   await store.sagaTask.toPromise();
 });

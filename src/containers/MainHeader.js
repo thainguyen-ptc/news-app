@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
 import debounce from 'lodash.debounce';
 
-import sourceNews from 'mock-data/sources';
 import MainHeaderComponent from 'components/MainHeader/MainHeader';
+import { getNewsSourcesData } from 'store/selectors/pages/newsSourcesSelector';
 
-function MainHeader () {
+function MainHeader ({ newsSources }) {
   const router = useRouter();
   const onSourcesSelection = debounce(handleSourceSelection, 200);
   const [ selectedSourceIdsMap, updateSelectedSourceIdsMap ] = useState({});
@@ -51,9 +52,15 @@ function MainHeader () {
   } 
 
   return <MainHeaderComponent
-    sources={sourceNews}
+    sources={newsSources}
     selectedSourceIdsMap={selectedSourceIdsMap}
     onSelectSource={onSourcesSelection} />;
 }
 
-export default MainHeader;
+function mapStateToProps (state) {
+  const newsSources = getNewsSourcesData(state);
+
+  return { newsSources };
+}
+
+export default connect(mapStateToProps)(MainHeader);
