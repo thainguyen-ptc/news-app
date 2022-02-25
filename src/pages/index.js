@@ -11,6 +11,7 @@ import { StyledContainer } from 'styles/pages/HomePage.style';
 import withSSREnvironment from 'hocs/withSSREnvironment';
 import MainLayout from 'layouts/MainLayout';
 import MainHeader from 'containers/MainHeader';
+import MainFooter from 'components/MainFooter/MainFooter';
 import NewsFeed from 'components/pages/home-page/NewsFeed/NewsFeed';
 
 import reduxWrapper from 'store';
@@ -22,7 +23,6 @@ import {
   getWhetherArticleFeedsLoading
 } from 'store/selectors/pages/home-page/articleFeedsSelector';
 
-const MainFooter = () => <>This is a dummy footer</>;
 const NewsFeedRenderer = withSSREnvironment(NewsFeed);
 
 function HomePage ({
@@ -68,7 +68,7 @@ function HomePage ({
               loadMore={ handleLoadMoreNewsFeed }
               hasMore={ couldNewsFeedBeLoadedMore }
               loader={
-                <Fragment key={ 0 }>Loading...</Fragment>
+                <p className="text-center mt-5 pt-4" key={ 0 }>Loading...</p>
               }>
               <NewsFeedRenderer data={ newsFeed } />
             </InfiniteScroll>
@@ -76,7 +76,7 @@ function HomePage ({
         }
         {
           !couldNewsFeedBeLoadedMore && !isNewsFeedLoading
-            && <p className="font-italic text-center">You’re all caught up!</p>
+            && <p className="font-italic text-center mt-5 pt-4">You’re all caught up!</p>
         }
       </StyledContainer>
     </MainLayout>
