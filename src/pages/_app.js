@@ -1,9 +1,10 @@
 import React from 'react';
+import reduxWrapper from 'store';
 
 import '../styles/globals.css';
 
-function MyApp({ Component, pageProps }) {
+function MasterApp({ Component, pageProps }) {
   return <Component {...pageProps} />;
 }
 
-export default MyApp;
+export default reduxWrapper.withRedux(MasterApp);
